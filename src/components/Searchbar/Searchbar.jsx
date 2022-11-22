@@ -1,31 +1,27 @@
 import React, { Component } from 'react';
 import { Button, ButtonLabel, Form, Header, Input } from './Searchbar.styled';
 import { AiOutlineSearch } from 'react-icons/ai';
+import { toast } from 'react-toastify';
 
 export class Searchbar extends Component {
   state = {
     pageName: '',
-  };
+     };
 
   handleInputChange = e => {
-    // console.log(hits);
     this.setState({ pageName: e.currentTarget.value.toLowerCase() });
-    console.log(this.state.pageName);
   };
 
   handleSubmit = e => {
-      e.preventDefault();
-      if (this.state.pageName.trim() === '') {
-          alert('введите имя')
-          return
-      }
-      this.props.onSubmit(this.state.pageName);
-      this.reset()
+    e.preventDefault();
+    if (this.state.pageName.trim() === '') {
+      toast.error('Search field is empty!');
+      return;
+    }
+    this.props.onSubmit(this.state);
+      this.setState({ pageName: '' })
   };
 
-  reset = () => {
-    this.setState({ pageName: '' });
-  };
   render() {
     return (
       <Header>
@@ -40,8 +36,6 @@ export class Searchbar extends Component {
             className="input"
             autocomplete="off"
             onChange={this.handleInputChange}
-            //   name="filter"
-            //   value={value}
             placeholder="Search images and photos"
           ></Input>
         </Form>
@@ -49,5 +43,3 @@ export class Searchbar extends Component {
     );
   }
 }
-
-

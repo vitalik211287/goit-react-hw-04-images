@@ -1,20 +1,37 @@
 import React, { Component } from 'react';
-import { Backdrop, Modals } from './Modal.styled';
+import { Backdrop, Modals, Image } from './Modal.styled';
+import { createPortal } from 'react-dom';
 
+const modalRoot = document.querySelector('#modal-root');
 export default class Modal extends Component {
   componentDidMount() {
-    console.log('Modal componentDidMount');
-   }
+    window.addEventListener('keydown', this.escapeClickHandler);
+  }
 
   componentWillUnmount() {
-    console.log('Modal componentWillUnmount');
-   }
+    window.removeEventListener('keydown', this.escapeClickHandler);
+  }
+
+  escapeClickHandler = e => {
+    if (e.code === 'Escape') {
+      this.props.toggleModal();
+    }
+  };
+
+  handleBackdropClick = e => {
+    if (e.currentTarget === e.target) {
+      this.props.toggleModal();
+    }
+  };
 
   render() {
-    return (
-      <Backdrop>
-        <Modals>{this.props.children}</Modals>
-      </Backdrop>
+    return createPortal(
+      <Backdrop onClick={this.handleBackdropClick}>
+        <Modals>
+          <Image src={this.props.largeImageURL} />
+        </Modals>
+      </Backdrop>,
+      modalRoot
     );
   }
 }
