@@ -1,5 +1,6 @@
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class ImageGallery extends Component {
   render() {
@@ -15,3 +16,7 @@ export default class ImageGallery extends Component {
     );
   }
 }
+ImageGallery.propTypes = {
+    modalClick: PropTypes.func,
+    pageInfo: PropTypes.arrayOf(PropTypes.object)
+};

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, ButtonLabel, Form, Header, Input } from './Searchbar.styled';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
 
 export class Searchbar extends Component {
   state = {
@@ -43,3 +44,7 @@ export class Searchbar extends Component {
     );
   }
 }
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func,
+  onChange:PropTypes.func,
+};

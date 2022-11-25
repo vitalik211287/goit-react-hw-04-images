@@ -15,6 +15,7 @@ export class App extends Component {
     images: [],
     loading: false,
     largeImageURL: '',
+    pageInfo: '',
   };
 
   fetchImages = () => {
@@ -46,9 +47,19 @@ export class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { page, pageName, images, loading } = this.state;
+    const { page, pageName, images, loading, pageInfo } = this.state;
     if (prevState.pageName !== pageName || prevState.page !== page) {
       this.fetchImages();
+      if (page * 12 >= pageInfo.totalHits && pageInfo.totalHits !== 0) {
+        toast.error(
+          "We're sorry, but you've reached the end of search results."
+        );
+      }
+    }
+    if (pageInfo.totalHits === 0) {
+      toast.error(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
     }
   }
 
@@ -60,7 +71,7 @@ export class App extends Component {
   };
 
   render() {
-    const { images, loading, largeImageURL } = this.state;
+    const { images, loading, largeImageURL, pageInfo, page } = this.state;
     return (
       <div>
         <Searchbar onSubmit={this.formSubmitHandler} state={this.state} />
@@ -69,7 +80,7 @@ export class App extends Component {
           pageInfo={images}
           toggleModal={this.toggleModal}
         />
-        {images.length > 0 && <Button onClick={this.pageCounter} />}
+        {images.length >= page * 12 && <Button onClick={this.pageCounter} />}
         {loading && <Loader />}
         {largeImageURL && (
           <Modal
