@@ -20,21 +20,33 @@ export class App extends Component {
   fetchImages = () => {
     const API_KEY = '30108062-264069135fbcff220b3f8c28b';
     const URL = 'https://pixabay.com/api/?key=';
-    const { page, pageName, images} = this.state;
+    const { page, pageName, images } = this.state;
     this.setState({ loading: true });
     setTimeout(() => {
       fetch(
         `${URL}${API_KEY}&q=${pageName}&image_type=photo&orientation=horizontal&page=${page}&per_page=12`
       )
         .then(res => res.json())
-        .then(pageInfo => this.setState({ pageInfo }))
+        .then(pageInfo => {
+          if (page * 12 >= pageInfo.totalHits && pageInfo.totalHits > 0) {
+            toast.error(
+              "We're sorry, but you've reached the end of search results."
+            );
+          }
+          if (pageInfo.totalHits === 0) {
+            toast.error(
+              'Sorry, there are no images matching your search query. Please try again.'
+            );
+          }
+          this.setState({ pageInfo });
+        })
         .then(() =>
           this.setState(({ pageInfo }) => ({
             images: [...images, ...pageInfo.hits],
           }))
         )
         .finally(() => this.setState({ loading: false }));
-    }, 1000);
+    }, 0);
   };
 
   formSubmitHandler = ({ pageName }) => {
@@ -46,19 +58,9 @@ export class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { page, pageName, pageInfo } = this.state;
+    const { page, pageName} = this.state;
     if (prevState.pageName !== pageName || prevState.page !== page) {
       this.fetchImages();
-      if (page * 12 >= pageInfo.totalHits && pageInfo.totalHits !== 0) {
-        toast.error(
-          "We're sorry, but you've reached the end of search results."
-        );
-      }
-    }
-    if (pageInfo.totalHits === 0) {
-      toast.error(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
     }
   }
 
