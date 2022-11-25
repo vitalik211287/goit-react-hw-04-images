@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Button from './Button/Button';
 import ImageGallery from './ImageGallery/ImageGallery';
-import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
 import Loader from './Loader/Loader';
 import Modal from './Modal';
 import { Searchbar } from './Searchbar/Searchbar';
@@ -21,7 +20,7 @@ export class App extends Component {
   fetchImages = () => {
     const API_KEY = '30108062-264069135fbcff220b3f8c28b';
     const URL = 'https://pixabay.com/api/?key=';
-    const { page, pageName, images, loading, id } = this.state;
+    const { page, pageName, images} = this.state;
     this.setState({ loading: true });
     setTimeout(() => {
       fetch(
@@ -47,7 +46,7 @@ export class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { page, pageName, images, loading, pageInfo } = this.state;
+    const { page, pageName, pageInfo } = this.state;
     if (prevState.pageName !== pageName || prevState.page !== page) {
       this.fetchImages();
       if (page * 12 >= pageInfo.totalHits && pageInfo.totalHits !== 0) {
@@ -71,7 +70,7 @@ export class App extends Component {
   };
 
   render() {
-    const { images, loading, largeImageURL, pageInfo, page } = this.state;
+    const { images, loading, largeImageURL, page } = this.state;
     return (
       <div>
         <Searchbar onSubmit={this.formSubmitHandler} state={this.state} />
