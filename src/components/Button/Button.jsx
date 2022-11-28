@@ -2,7 +2,7 @@ import React from 'react';
 import { Buttons } from './Button.styled';
 import PropTypes from 'prop-types';
 
-const Button = ({ onClick, state }) => {
+const Button = ({ onClick }) => {
   return (
     <Buttons onClick={() => onClick()} type="button">
       Load more
