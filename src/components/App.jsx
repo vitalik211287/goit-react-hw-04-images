@@ -15,34 +15,7 @@ export function App() {
   const [loading, setLoading] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState('');
 
-  const fetchImages = () => {
-    const API_KEY = '30108062-264069135fbcff220b3f8c28b';
-    const URL = 'https://pixabay.com/api/?key=';
-
-    setLoading(true);
-    setTimeout(() => {
-      fetch(
-        `${URL}${API_KEY}&q=${pageName}&image_type=photo&orientation=horizontal&page=${page}&per_page=12`
-      )
-        .then(res => res.json())
-          .then(pageInfo =>
-          {
-          if (page * 12 >= pageInfo.totalHits && pageInfo.totalHits > 0) {
-            toast.error(
-              "We're sorry, but you've reached the end of search results."
-            );
-          }
-          if (pageInfo.totalHits === 0) {
-            toast.error(
-              'Sorry, there are no images matching your search query. Please try again.'
-            );
-          }
-           setImages([...images, ...pageInfo.hits])
-          })
-         .finally(setLoading(false));
-    }, 500);
-  };
-
+  
   const formSubmitHandler = pageName => {
     setPageName(pageName);
     setPage(1);
@@ -56,8 +29,34 @@ export function App() {
   useEffect(() => {
     if (!pageName ?? page !== 1) {
       return;
-    } else fetchImages();
-  }, [pageName, page]);
+    } const fetchImages = () => {
+      const API_KEY = '30108062-264069135fbcff220b3f8c28b';
+      const URL = 'https://pixabay.com/api/?key=';
+
+      setLoading(true);
+      setTimeout(() => {
+        fetch(
+          `${URL}${API_KEY}&q=${pageName}&image_type=photo&orientation=horizontal&page=${page}&per_page=12`
+        )
+          .then(res => res.json())
+          .then(pageInfo => {
+            if (page * 12 >= pageInfo.totalHits && pageInfo.totalHits > 0) {
+              toast.error(
+                "We're sorry, but you've reached the end of search results."
+              );
+            }
+            if (pageInfo.totalHits === 0) {
+              toast.error(
+                'Sorry, there are no images matching your search query. Please try again.'
+              );
+            }
+            setImages([...images, ...pageInfo.hits]);
+          })
+          .finally(setLoading(false));
+      }, 500);
+    };
+ fetchImages();
+  }, [pageName, page, images]);
 
   const pageCounter = () => {
     setPage(page + 1);
