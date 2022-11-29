@@ -14,8 +14,6 @@ export function App() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState('');
-  const [pageInfo, setPageInfo] = useState('');
-  console.log(pageName);
 
   const fetchImages = () => {
     const API_KEY = '30108062-264069135fbcff220b3f8c28b';
@@ -29,23 +27,21 @@ export function App() {
         .then(res => res.json())
           .then(pageInfo =>
           {
-        //   console.log(pageInfo);
-        //   if (page * 12 >= pageInfo.totalHits && pageInfo.totalHits > 0) {
-        //     toast.error(
-        //       "We're sorry, but you've reached the end of search results."
-        //     );
-        //   }
-        //   if (pageInfo.totalHits === 0) {
-        //     toast.error(
-        //       'Sorry, there are no images matching your search query. Please try again.'
-        //     );
-        //   }
-          setPageInfo(pageInfo)       })
-        .then(setImages([...images, ...pageInfo.hits]))
-        .finally(setLoading(false));
-    }, 0);
+          if (page * 12 >= pageInfo.totalHits && pageInfo.totalHits > 0) {
+            toast.error(
+              "We're sorry, but you've reached the end of search results."
+            );
+          }
+          if (pageInfo.totalHits === 0) {
+            toast.error(
+              'Sorry, there are no images matching your search query. Please try again.'
+            );
+          }
+           setImages([...images, ...pageInfo.hits])
+          })
+         .finally(setLoading(false));
+    }, 500);
   };
-  console.log(pageInfo);
 
   const formSubmitHandler = pageName => {
     setPageName(pageName);
@@ -58,10 +54,10 @@ export function App() {
   };
 
   useEffect(() => {
-    if (!pageName) {
+    if (!pageName ?? page !== 1) {
       return;
     } else fetchImages();
-  }, [pageName, page ]);
+  }, [pageName, page]);
 
   const pageCounter = () => {
     setPage(page + 1);

@@ -7,9 +7,6 @@ import { useState } from 'react';
 
 export function Searchbar({ onSubmit, state }) {
   const [pageName, setPageName] = useState('');
-  //   state = {
-  //     pageName: '',
-  //      };
 
   const handleInputChange = e => {
       setPageName(e.currentTarget.value.toLowerCase());
